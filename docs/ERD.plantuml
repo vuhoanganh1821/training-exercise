@@ -1,0 +1,78 @@
+@startuml Todolist
+
+enum EUserRole {
+  USER
+  ADMIN
+}
+
+enum ETaskStatus {
+  TODO
+  DOING
+  DONE
+}
+
+entity Task {
+  -id: ObjectId
+  --
+  ~projectId: ObjectId
+  ~userId: ObjectId
+  ~linkedTo: ObjectId
+  ~createdBy: ObjectId
+  ~updatedBy: ObjectId
+  --
+  *title: String
+  +status: ETaskStatus
+  +description: String
+  +createdAt: Date
+  +updatedAt: Date
+}
+
+entity User {
+  -id: ObjectId
+  --
+  *email: String
+  +name: String
+  +createAt: Date
+  +updateAt: Date
+}
+
+entity UserCredentials {
+    -id: ObjectId
+    --
+    ~userId: ObjectId
+    --
+    *password: String
+}
+
+entity Project {
+  -id: ObjectId
+  --
+  ~createdBy: ObjectId
+  ~updatedBy: ObjectId
+  --
+  *title: String
+  +description: String
+  +createdAt: Date
+  +updatedAt: Date
+}
+
+entity ProjectUser {
+  -id: ObjectId
+  --
+  ~userId: String
+  ~projectId: String
+  --
+  *role: EUserRole
+}
+
+Task ||--o| Task
+User ||--|{ Task
+Project ||--|{ Task
+Project ||-|{ ProjectUser
+User ||--|{ ProjectUser
+User ||--|| UserCredentials
+EUserRole -- ProjectUser
+ETaskStatus -- Task
+
+
+@enduml
